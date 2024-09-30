@@ -1,5 +1,6 @@
 import random
 import time
+import os  # Import pour nettoyer le terminal
 from db import recuperer_joueur, sauvegarder_statistiques  # Importer les fonctions depuis bdd.py
 
 # Variables globales pour suivre les statistiques
@@ -11,6 +12,7 @@ nb_coups_gagnants = 0
 
 # Fonction pour afficher les règles du jeu
 def afficher_regles():
+    os.system('cls' if os.name == 'nt' else 'clear')  # Nettoyer le terminal
     print(""" 
     Bienvenue au Casino ! Voici les règles du jeu :
     1. Vous devez deviner un nombre que j'ai choisi aléatoirement.
@@ -21,10 +23,10 @@ def afficher_regles():
     3. Si vous réussissez, vous pouvez choisir de continuer au niveau suivant ou quitter avec vos gains.
     4. Vous avez un temps limité de 10 secondes par essai pour deviner le nombre.
     """)
-    
 
 # Fonction pour gérer un niveau
 def jouer_niveau(best_level, essais, borne_sup, solde):
+    os.system('cls' if os.name == 'nt' else 'clear')  # Nettoyer le terminal
     nb_python = random.randint(1, borne_sup)
     print(f"Je viens de penser à un nombre entre 1 et {borne_sup}. Devinez lequel ?")
     print(f"Att : vous avez le droit à {essais} essais !")
@@ -73,6 +75,7 @@ def calculer_gain(essais, mise):
 # Fonction pour gérer les statistiques
 def afficher_statistiques():
     global total_games, total_wins, mise_totale, nb_coups_gagnants
+    os.system('cls' if os.name == 'nt' else 'clear')  # Nettoyer le terminal
     if total_games > 0:
         print(f"Statistiques générales depuis le début :")
         print(f" - Total de parties jouées : {total_games}")
@@ -84,6 +87,7 @@ def afficher_statistiques():
 # Fonction principale pour gérer le jeu
 def jeu_casino():
     global best_level, total_games, total_wins, mise_totale, nb_coups_gagnants
+    os.system('cls' if os.name == 'nt' else 'clear')  # Nettoyer le terminal
 
     pseudo = input("Je suis Python. Quel est votre pseudo ? ")
     joueur = recuperer_joueur(pseudo)
@@ -100,6 +104,7 @@ def jeu_casino():
     afficher_regles()
     
     while solde > 0:
+        os.system('cls' if os.name == 'nt' else 'clear')  # Nettoyer le terminal
         try:
             mise = float(input(f"Le jeu commence, entrez votre mise (entre 1 et {solde} €) : "))
             if mise <= 0 or mise > solde:
