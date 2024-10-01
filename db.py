@@ -1,6 +1,7 @@
 import pymysql
 import os
 from dotenv import load_dotenv
+from datetime import datetime  # Importer le module pour gérer la date/heure
 
 # Charger les variables d'environnement à partir du fichier .env
 load_dotenv()
@@ -48,23 +49,24 @@ def sauvegarder_statistiques(pseudo, joueur_data):
         cursor = db.cursor()
 
         # Vérifie si le joueur existe déjà
-        cursor.execute("SELECT * FROM user WHERE pseudo = %s", (pseudo))
+        cursor.execute("SELECT * FROM user WHERE pseudo = %s", (pseudo,))
         result = cursor.fetchone()
 
         if result:
-            print(f"Bienvenue à nouveau {joueur_data['pseudo']} ! ") 
+            print(f"Bienvenue à nouveau {pseudo} !")  # Corrigé pour utiliser le paramètre pseudo directement
             # Mise à jour des statistiques du joueur
             cursor.execute("""
                 UPDATE user SET best_level = %s, solde = %s, best_gain = %s
                 WHERE pseudo = %s
             """, (joueur_data['best_level'], joueur_data['solde'], joueur_data['best_gain'], pseudo))
         else:
-            print("Bienvenue dans notre Casion pour votre première fois !")
-            # Insérer un nouveau joueur
+            print("Bienvenue dans notre Casino pour votre première fois !")
+            # Insérer un nouveau joueur avec la date de la première connexion
+            first_connexion = datetime.now()  # Date actuelle
             cursor.execute("""
-                INSERT INTO user (pseudo, best_level, solde, best_gain)
-                VALUES (%s, %s, %s, %s)
-            """, (pseudo, joueur_data['best_level'], joueur_data['solde'], joueur_data['best_gain']))
+                INSERT INTO user (pseudo, best_level, solde, best_gain, first_connexion)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (pseudo, joueur_data['best_level'], joueur_data['solde'], joueur_data['best_gain'], first_connexion))
 
         db.commit()
         cursor.close()

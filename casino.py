@@ -1,5 +1,6 @@
 import random
 import time
+from time import sleep
 import os  # Import pour nettoyer le terminal
 from db import recuperer_joueur, sauvegarder_statistiques  # Importer les fonctions depuis bdd.py
 
@@ -70,7 +71,7 @@ def calculer_gain(essais, mise):
         return mise
     elif essais == 3:
         return mise / 2
-    return 0
+    # return 0
 
 # Fonction pour gérer les statistiques
 def afficher_statistiques():
@@ -94,12 +95,19 @@ def jeu_casino():
 
     if joueur:
         print(f"Rebonjour {pseudo}, content de vous revoir au Casino !")
+        sleep(2)
         solde = joueur['solde']
         best_level = joueur['best_level']  # On récupère le best_level depuis la base de données
     else:
         print(f"Bienvenue {pseudo}, vous avez 10 € ! Très bien, installez-vous SVP à la table de pari.")
+        sleep(2)
         solde = 10
         best_level = 1
+    
+    # Vérifier si le joueur n'a plus d'argent avant de commencer
+    if solde <= 0:
+        print("Dégage clochard ! T'as plus de talle.")
+        return  # Quitter la fonction si le joueur n'a pas de solde
 
     afficher_regles()
     
@@ -109,6 +117,7 @@ def jeu_casino():
             mise = float(input(f"Le jeu commence, entrez votre mise (entre 1 et {solde} €) : "))
             if mise <= 0 or mise > solde:
                 print(f"Le montant saisi n'est pas valide. Entrer SVP un montant entre 1 et {solde} €.")  
+                sleep(2)
                 continue
         except ValueError:
             print(f"Le montant saisi n'est pas valide. Entrer SVP un montant entre 1 et {solde} €.")
